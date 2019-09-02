@@ -75,16 +75,26 @@ In either case, you will want to have [Serverless] installed, eg. `npm install -
 
   functions:
     myfunc:
-      handler: mypackage.myfunc
-      # Here, mypackage is the Haskell package name and myfunc is the executable
-      # name as defined in the Cabal file. The handler field may be prefixed
-      # with a path of the form `dir1/.../dirn`, relative to `serverless.yml`,
-      # which points to the location where the Haskell package `mypackage` is
-      # defined. This prefix is not needed when the Stack project is defined at
-      # the same level as `serverless.yml`.
+      handler: Mymodule.myfunc
+      # Here, Mymodule is the Haskell module name and myfunc is the Haskell
+      # function defined in it.
 
   plugins:
     - serverless-haskell
+  ```
+
+* Write your handler function in `src/Mymodule.hs`:
+
+  ```haskell
+  module Mymodule where
+
+  import qualified Data.Aeson as Aeson
+
+  myfunc :: Aeson.Value -> IO [Int]
+  myfunc evt = do
+    putStrLn "This should go to logs"
+    print evt
+    pure [1, 2, 3]
   ```
 
 * Write your `main` function:
@@ -94,13 +104,8 @@ In either case, you will want to have [Serverless] installed, eg. `npm install -
 
   import AWSLambda
 
-  main = lambdaMain handler
-
-  handler :: Aeson.Value -> IO [Int]
-  handler evt = do
-    putStrLn "This should go to logs"
-    print evt
-    pure [1, 2, 3]
+  main = lambdaMain [ ("Mymodule.myfunc", dispatchTo Mymodule.myfunc),
+                    ]
   ```
 
 * Use `sls deploy` to deploy the executable to AWS Lambda.
