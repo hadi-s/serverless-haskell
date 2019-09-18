@@ -6,17 +6,14 @@ provider:
 
 functions:
   main:
-    handler: shtest.main
+    handler: Lib.handler
 
   apigw:
-    handler: shtest.apigw
+    handler: Lib.apiGatewayHello
     events:
       - http:
           path: hello/{name}
           method: get
-
-  subdir:
-    handler: subdir/subtest.main
 
   jsfunc:
     runtime: nodejs8.10
@@ -28,11 +25,6 @@ plugins:
 
 custom:
   haskell:
-    arguments:
-      main:
-      - one
-      - two
-      - --three
     # environment variables appear as strings. Index that string into a
     # dictionary with actual boolean values to get the boolean back
     docker: ${self:custom.boolean.${env:FORCE_DOCKER, "DOCKER_DEFAULT"}}

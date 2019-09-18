@@ -1,4 +1,0 @@
-resolver: RESOLVER
-
-extra-deps:
-- DIST

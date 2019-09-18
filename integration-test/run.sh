@@ -144,18 +144,13 @@ else
 
     assert_file_same "sls logs" logs.txt
 
-    # Run the function from the subdirectory and verify the result
-    sls invoke --function subdir --data '{}' > subdir_output.json
-
-    assert_file_same "sls invoke (subdirectory)" subdir_output.json
-
     # Run the JavaScript function and verify the results
     sls invoke --function jsfunc --data '[4, 5, 6]' > output_js.json
 
     assert_file_same "sls invoke (JavaScript)" output_js.json
 
     # Update a function
-    sed 's/33/44/g' Main.hs > Main_modified.hs && mv Main_modified.hs Main.hs
+    sed 's/33/44/g' src/Lib.hs > src/Lib_modified.hs && mv src/Lib_modified.hs src/Lib.hs
     sls deploy function --function main
 
     # Verify the updated result

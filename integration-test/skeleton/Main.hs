@@ -3,16 +3,12 @@ Main module for the integration test.
 -}
 {-# LANGUAGE OverloadedStrings #-}
 
-import qualified Data.Aeson as Aeson
-
 import AWSLambda
 
-import System.Environment
-
-import Text.Regex.PCRE.Light
+import qualified Lib
 
 main :: IO ()
-main = lambdaMain handler
+main = lambdaMain [ ("")]
 
 handler :: Aeson.Value -> IO [Int]
 handler evt = do
